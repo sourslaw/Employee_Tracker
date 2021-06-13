@@ -19,7 +19,7 @@ const start = () => {
 		name: 'effWannaDo',
 		type: 'list',
 		message: 'select an action . . .',
-		choices: ['view all employees', 'view all employees by department', 'view all employees by manager', 'add an employee', 'update an employee', 'delete an employee', 'exit'],
+		choices: ['view all employees', 'view all employees by department', 'view all employees by manager', new inquirer.Separator(), 'add an employee', 'update an employee', 'delete an employee', 'exit'],
 	    })
 	    .then((answer) => {
 			switch (answer.effWannaDo) {
@@ -47,8 +47,6 @@ const start = () => {
 					break;		
         
 		        default:
-				// console.log(`invalid action: ${answer.action}`);
-				// connection.end();
 					console.log('invalid: bye bye')
 					break;
 			}
@@ -61,7 +59,7 @@ const viewAllEmp = () => {
 	connection.query('SELECT * FROM employee', (err, res) => {
 		if (err) throw err;
 
-		console.log(res);
+		console.log( console.table(res) );
 		
 		start();
 	});
@@ -92,10 +90,8 @@ const addEmp = () => {
             }
         ])
         .then((answer) => {
-            // when finished prompting, insert a new item into the db with that info
             connection.query(
                 'INSERT INTO employee SET ?',
-                // QUESTION: What does the || 0 do?
                 {
                     first_name: answer.firstName,
                     last_name: answer.lastName,
@@ -113,30 +109,27 @@ const addEmp = () => {
 };
 
 const updateEmp = () => {
-	console.log('in the update bit . . .');
+	console.log('here are the current employees . . .');
 
 	connection.query('SELECT * FROM employee', (err, results) => {
 		if (err) throw err;
-		// once you have the items, prompt the user for which they'd like to bid on
 		inquirer
 		  .prompt([
 			{
 			  name: 'choice',
-			  type: 'rawlist',
+			  type: 'list',
 			  choices() {
 				const choiceArray = [];
 
-				// results.forEach(({ id, first_name }) => {
-				//   choiceArray.push(id, first_name);
-				// });
 				results.forEach((person) => {
 				  choiceArray.push(person.id);
 				});
+
+				console.table(results)
 				
-				// console.log(person.id);
 				return choiceArray;
 			  },
-			  message: 'who would you like to update?',
+			  message: 'select the id of the employee you would like to update?',
 			},
             { // just prompts for this info again
                 name: 'firstName',
@@ -160,10 +153,8 @@ const updateEmp = () => {
             },
 		  ])
 		  .then((answer) => {
-			// get the information of the chosen item
 			connection.query(
                 'UPDATE employee SET ? WHERE ?',
-                // QUESTION: What does the || 0 do?
                 [
 					{
 						first_name: answer.firstName,
@@ -181,46 +172,38 @@ const updateEmp = () => {
 					// re-prompt user
 					start();
                 }
-			);
-			
-				
+			);			
 	  });
 	})
-	
 };
 
 const deleteEmp = () => {
-	console.log('in the deleting part');
+	console.log('in the deleting part: here the current employees  . . .');
 
 	connection.query('SELECT * FROM employee', (err, results) => {
 		if (err) throw err;
-		// once you have the items, prompt the user for which they'd like to bid on
 		inquirer
 		  .prompt([
 			{
 			  name: 'choice',
-			  type: 'rawlist',
+			  type: 'list',
 			  choices() {
 				const choiceArray = [];
 
-				// results.forEach(({ id, first_name }) => {
-				//   choiceArray.push(id, first_name);
-				// });
 				results.forEach((person) => {
 				  choiceArray.push(person.id);
 				});
+
+				console.table(results)
 				
-				// console.log(person.id);
 				return choiceArray;
 			  },
-			  message: 'who would you like to delete?',
+			  message: 'select the id of the employee you would like to delete?',
 			},
 		  ])
 		  .then((answer) => {
-			// get the information of the chosen item
 			connection.query(
                 'DELETE FROM employee WHERE ?',
-                // QUESTION: What does the || 0 do?
                 [
 					{
 						id: answer.choice
@@ -232,13 +215,9 @@ const deleteEmp = () => {
 					// re-prompt user
 					start();
                 }
-			);
-			
-				
+			);			
 	  });
-	})
-
-	
+	})	
 };
   
 
