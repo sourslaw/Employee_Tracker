@@ -19,21 +19,38 @@ const start = () => {
 		name: 'effWannaDo',
 		type: 'list',
 		message: 'select an action . . .',
-		choices: ['view all employees', 'view all employees by department', 'view all employees by manager', new inquirer.Separator(), 'add an employee', 'update an employee', 'delete an employee', 'exit'],
+		choices: [
+			'view all employees', 
+			'view all departments', 
+			'view all roles', 
+			new inquirer.Separator(), 
+			'add an employee',
+			'add a department',
+			'add a role',
+			'update an employee', 
+			'delete an employee', 
+			'exit'
+		],
 	    })
 	    .then((answer) => {
 			switch (answer.effWannaDo) {
 		        case 'view all employees':
 					viewAllEmp();
 					break;
-		        case 'view all employees by department':
-					viewEmpDept();
+		        case 'view all departments':
+					viewAllDepts();
 					break;        
-		        case 'view all employees by manager':
-					viewEmpMang();
+		        case 'view all roles':
+					viewAllRoles();
 					break; 
 		        case 'add an employee':
 					addEmp();
+					break; 
+		        case 'add a department':
+					addDept();
+					break; 
+		        case 'add a role':
+					addRole();
 					break; 
 		        case 'update an employee':
 					updateEmp();
@@ -53,6 +70,7 @@ const start = () => {
 	    });
 };
 
+// V I E W I N G
 const viewAllEmp = () => {
 	console.log('v i e w i n g employees . . .')
 
@@ -65,6 +83,32 @@ const viewAllEmp = () => {
 	});
 };
 
+const viewAllDepts = () => {
+	console.log('v i e w i n g departments . . .')
+
+	connection.query('SELECT * FROM department', (err, res) => {
+		if (err) throw err;
+
+		console.log( console.table(res) );
+		
+		start();
+	});
+};
+
+const viewAllRoles = () => {
+	console.log('v i e w i n g roless . . .')
+
+	connection.query('SELECT * FROM role', (err, res) => {
+		if (err) throw err;
+
+		console.log( console.table(res) );
+		
+		start();
+	});
+};
+
+
+// A D D I N G
 const addEmp = () => {
 	inquirer
         .prompt([
@@ -108,6 +152,83 @@ const addEmp = () => {
         });
 };
 
+const addDept = () => {
+	inquirer
+        .prompt([
+            {
+                name: 'id',
+                type: 'input',
+                message: "enter the id of the department: ",
+            },
+            {
+                name: 'name',
+                type: 'input',
+                message: "enter the name of the department: ",
+            }
+        ])
+        .then((answer) => {
+            connection.query(
+                'INSERT INTO department SET ?',
+                {
+                    id: answer.id,
+                    name: answer.name,
+                },
+                (err) => {
+                    if (err) throw err;
+					console.log('the department as been c r e a t e d . . .');
+					// re-prompt user
+					start();
+                }
+            );
+        });
+};
+
+const addRole = () => {
+	inquirer
+        .prompt([
+            {
+                name: 'id',
+                type: 'input',
+                message: "enter the id of the role: ",
+            },
+            {
+                name: 'title',
+                type: 'input',
+                message: "enter the title of the role: ",
+			},
+			{
+                name: 'salary',
+                type: 'input',
+                message: "enter the salary of the role: ",
+			},
+			{
+                name: 'departmentId',
+                type: 'input',
+                message: "enter the id of the role: ",
+            }
+        ])
+        .then((answer) => {
+            connection.query(
+                'INSERT INTO role SET ?',
+                {
+                    id: answer.id,
+					title: answer.title,
+					salary: answer.salary,
+					department_id: answer.departmentId
+                },
+                (err) => {
+                    if (err) throw err;
+					console.log('the R O L E as been c r e a t e d . . .');
+
+					start();
+                }
+            );
+        });
+};
+
+
+
+// U P D A T I N G
 const updateEmp = () => {
 	console.log('here are the current employees . . .');
 
