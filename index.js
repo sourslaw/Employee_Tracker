@@ -19,7 +19,7 @@ const start = () => {
 		name: 'effWannaDo',
 		type: 'list',
 		message: 'select an action . . .',
-		choices: ['view all employees', 'view all employees by department', 'view all employees by manager', 'add an employee', 'update an employee', 'exit'],
+		choices: ['view all employees', 'view all employees by department', 'view all employees by manager', 'add an employee', 'update an employee', 'delete an employee', 'exit'],
 	    })
 	    .then((answer) => {
 			switch (answer.effWannaDo) {
@@ -38,6 +38,9 @@ const start = () => {
 		        case 'update an employee':
 					updateEmp();
 					break;
+		        case 'delete an employee':
+					deleteEmp();
+					break;
 				case 'exit':
 					connection.end();
 					console.log('bye bye')
@@ -53,7 +56,7 @@ const start = () => {
 };
 
 const viewAllEmp = () => {
-	console.log('viewing employees . . .')
+	console.log('v i e w i n g employees . . .')
 
 	connection.query('SELECT * FROM employee', (err, res) => {
 		if (err) throw err;
@@ -81,8 +84,8 @@ const addEmp = () => {
                 name: 'roleID',
                 type: 'input',
                 message: "enter the employee's role ID: ",
-	    },
-	    {
+			},
+			{
                 name: 'managerID',
                 type: 'input',
                 message: "enter the employee's manager's ID: ",
@@ -101,13 +104,143 @@ const addEmp = () => {
                 },
                 (err) => {
                     if (err) throw err;
-					console.log('an employee has been added . . .');
+					console.log('an employee has been a d d e d . . .');
 					// re-prompt user
 					start();
                 }
             );
         });
-}
+};
+
+const updateEmp = () => {
+	console.log('in the update bit . . .');
+
+	connection.query('SELECT * FROM employee', (err, results) => {
+		if (err) throw err;
+		// once you have the items, prompt the user for which they'd like to bid on
+		inquirer
+		  .prompt([
+			{
+			  name: 'choice',
+			  type: 'rawlist',
+			  choices() {
+				const choiceArray = [];
+
+				// results.forEach(({ id, first_name }) => {
+				//   choiceArray.push(id, first_name);
+				// });
+				results.forEach((person) => {
+				  choiceArray.push(person.id);
+				});
+				
+				// console.log(person.id);
+				return choiceArray;
+			  },
+			  message: 'who would you like to update?',
+			},
+            { // just prompts for this info again
+                name: 'firstName',
+                type: 'input',
+                message: "enter the employee's first name: ",
+            },
+            {
+                name: 'lastName',
+                type: 'input',
+                message: "enter the employee's last name: ",
+            },
+            {
+                name: 'roleID',
+                type: 'input',
+                message: "enter the employee's role ID: ",
+			},
+			{
+                name: 'managerID',
+                type: 'input',
+                message: "enter the employee's manager's ID: ",
+            },
+		  ])
+		  .then((answer) => {
+			// get the information of the chosen item
+			connection.query(
+                'UPDATE employee SET ? WHERE ?',
+                // QUESTION: What does the || 0 do?
+                [
+					{
+						first_name: answer.firstName,
+						last_name: answer.lastName,
+						role_id: answer.roleID,
+						manager_ID: answer.managerID,
+					},
+					{
+						id: answer.choice
+					},
+				],
+                (err) => {
+                    if (err) throw err;
+					console.log('an employee has been updated . . .');
+					// re-prompt user
+					start();
+                }
+			);
+			
+				
+	  });
+	})
+	
+};
+
+const deleteEmp = () => {
+	console.log('in the deleting part');
+
+	connection.query('SELECT * FROM employee', (err, results) => {
+		if (err) throw err;
+		// once you have the items, prompt the user for which they'd like to bid on
+		inquirer
+		  .prompt([
+			{
+			  name: 'choice',
+			  type: 'rawlist',
+			  choices() {
+				const choiceArray = [];
+
+				// results.forEach(({ id, first_name }) => {
+				//   choiceArray.push(id, first_name);
+				// });
+				results.forEach((person) => {
+				  choiceArray.push(person.id);
+				});
+				
+				// console.log(person.id);
+				return choiceArray;
+			  },
+			  message: 'who would you like to delete?',
+			},
+		  ])
+		  .then((answer) => {
+			// get the information of the chosen item
+			connection.query(
+                'DELETE FROM employee WHERE ?',
+                // QUESTION: What does the || 0 do?
+                [
+					{
+						id: answer.choice
+					},
+				],
+                (err) => {
+                    if (err) throw err;
+					console.log('an employee has been deleted. . .');
+					// re-prompt user
+					start();
+                }
+			);
+			
+				
+	  });
+	})
+
+	
+};
+  
 
 // Connect to the DB
 connection.connect((err) => {
