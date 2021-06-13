@@ -252,7 +252,12 @@ const updateEmp = () => {
 			  },
 			  message: 'select the id of the employee you would like to update?',
 			},
-            { // just prompts for this info again
+			{ // just prompts for this info again
+                name: 'id',
+                type: 'input',
+                message: "enter the employee's id number: ",
+            },
+            { 
                 name: 'firstName',
                 type: 'input',
                 message: "enter the employee's first name: ",
@@ -278,6 +283,7 @@ const updateEmp = () => {
                 'UPDATE employee SET ? WHERE ?',
                 [
 					{
+						id: answer.id,
 						first_name: answer.firstName,
 						last_name: answer.lastName,
 						role_id: answer.roleID,
