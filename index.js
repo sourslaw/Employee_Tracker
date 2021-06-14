@@ -83,10 +83,10 @@ const start = () => {
 const viewAllEmp = () => {
 	console.log( chalk.bold.cyan('\nV I E W I N G  all employees . . . \n') )
 
-	connection.query('SELECT * FROM employee', (err, res) => {
+	connection.query('SELECT employee.id,employee.role_id, employee.manager_id, employee.last_name, employee.first_name, role.title, role.salary FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id;', (err, res) => {
 		if (err) throw err;
 
-		console.log( console.table(res) );
+		console.table(res);
 		
 		start();
 	});
@@ -119,7 +119,7 @@ const viewAllDepts = () => {
 		  ])
 		  .then((answer) => {
 			connection.query(
-                'SELECT employee.id, employee.last_name, employee.first_name, role.title, role.salary, employee.manager_id FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE ?',
+                'SELECT employee.id, employee.role_id, employee.manager_id, employee.last_name, employee.first_name, role.title, role.salary FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE ?',
                 [
 					{
 						'department.id': answer.choice,
@@ -127,7 +127,7 @@ const viewAllDepts = () => {
 				],
                 (err, res) => {
                     if (err) throw err;
-					console.log( chalk.yellow('\nh e r e  are the results . . . \n') );
+					console.log( chalk.yellow('\nh e r e  are the results of the selected department . . . \n') );
 					console.table(res)
 					console.log('\n')
 					
@@ -165,7 +165,7 @@ const viewAllRoles = () => {
 		  ])
 		  .then((answer) => {
 			connection.query(
-                'SELECT employee.id, employee.last_name, employee.first_name, role.title, role.salary, employee.manager_id FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE ?',
+                'SELECT employee.id, employee.role_id, employee.manager_id, employee.last_name, employee.first_name, role.title, role.salary FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE ?',
                 [
 					{
 						'role.id': answer.choice,
@@ -173,7 +173,7 @@ const viewAllRoles = () => {
 				],
                 (err, res) => {
                     if (err) throw err;
-					console.log( chalk.yellow('\nh e r e  are the results . . . \n') );
+					console.log( chalk.yellow('\nh e r e  are the results of the selected role . . . \n') );
 					console.table(res)
 					console.log('\n')
 					
