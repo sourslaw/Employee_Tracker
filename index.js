@@ -1,6 +1,8 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
+const colors = require('colors');
+
 require('dotenv').config();
 
 
@@ -20,7 +22,7 @@ const start = () => {
 	        .prompt({
 		name: 'effWannaDo',
 		type: 'list',
-		message: 'select an action . . .',
+		message: 'select an action . . .'.brightBlue.bgBrightWhite,
 		choices: [
 			'view all employees', 
 			'view all departments', 
@@ -29,9 +31,14 @@ const start = () => {
 			'add an employee',
 			'add a department',
 			'add a role',
-			'update an employee', 
-			'delete an employee', 
-			'exit'
+			new inquirer.Separator(),
+			'update an employee',
+			new inquirer.Separator(), 
+			'delete an employee',
+			new inquirer.Separator(), 
+			'exit',
+			new inquirer.Separator(),
+			new inquirer.Separator(),
 		],
 	    })
 	    .then((answer) => {
@@ -103,7 +110,7 @@ const viewAllDepts = () => {
 				  choiceArray.push(person.id);
 				});
 
-				console.table(results)
+				console.table(results);
 				
 				return choiceArray;
 			  },
@@ -120,7 +127,7 @@ const viewAllDepts = () => {
 				],
                 (err, res) => {
                     if (err) throw err;
-					console.log('here are teh resutls. . .');
+					console.log('here are the results . . .');
 					console.table(res)
 					
 					start();
