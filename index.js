@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
-const colors = require('colors');
+const chalk = require('chalk');
 
 require('dotenv').config();
 
@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
 
     port: 3306,
-    // Your username
+
 	user: process.env.DB_USER,
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_NAME,
@@ -20,68 +20,68 @@ const connection = mysql.createConnection({
 const start = () => {
 	inquirer
 	        .prompt({
-		name: 'effWannaDo',
-		type: 'list',
-		message: 'select an action . . .'.brightBlue.bgBrightWhite,
-		choices: [
-			'view all employees', 
-			'view all departments', 
-			'view all roles', 
-			new inquirer.Separator(), 
-			'add an employee',
-			'add a department',
-			'add a role',
-			new inquirer.Separator(),
-			'update an employee',
-			new inquirer.Separator(), 
-			'delete an employee',
-			new inquirer.Separator(), 
-			'exit',
-			new inquirer.Separator(),
-			new inquirer.Separator(),
-		],
-	    })
-	    .then((answer) => {
-			switch (answer.effWannaDo) {
-		        case 'view all employees':
-					viewAllEmp();
-					break;
-		        case 'view all departments':
-					viewAllDepts();
-					break;        
-		        case 'view all roles':
-					viewAllRoles();
-					break; 
-		        case 'add an employee':
-					addEmp();
-					break; 
-		        case 'add a department':
-					addDept();
-					break; 
-		        case 'add a role':
-					addRole();
-					break; 
-		        case 'update an employee':
-					updateEmp();
-					break;
-		        case 'delete an employee':
-					deleteEmp();
-					break;
-				case 'exit':
-					connection.end();
-					console.log('bye bye')
-					break;		
-        
-		        default:
-					console.log('invalid: bye bye')
-					break;
-			}
-	    });
+			name: 'effWannaDo',
+			type: 'list',
+			message: chalk.bold('select an action . . .'),
+			choices: [
+				'view all employees', 
+				'view all departments', 
+				'view all roles', 
+				new inquirer.Separator(), 
+				'add an employee',
+				'add a department',
+				'add a role',
+				new inquirer.Separator(),
+				'update an employee',
+				new inquirer.Separator(), 
+				'delete an employee',
+				new inquirer.Separator(), 
+				'exit',
+				new inquirer.Separator(),
+				new inquirer.Separator(),
+			],
+			})
+			.then((answer) => {
+				switch (answer.effWannaDo) {
+					case 'view all employees':
+						viewAllEmp();
+						break;
+					case 'view all departments':
+						viewAllDepts();
+						break;        
+					case 'view all roles':
+						viewAllRoles();
+						break; 
+					case 'add an employee':
+						addEmp();
+						break; 
+					case 'add a department':
+						addDept();
+						break; 
+					case 'add a role':
+						addRole();
+						break; 
+					case 'update an employee':
+						updateEmp();
+						break;
+					case 'delete an employee':
+						deleteEmp();
+						break;
+					case 'exit':
+						connection.end();
+						console.log('bye bye')
+						break;		
+			
+					default:
+						console.log('invalid: bye bye')
+						break;
+				}
+			});
 };
 
 // V I E W I N G
 const viewAllEmp = () => {
-	console.log('v i e w i n g employees . . .')
+	console.log( chalk.bold.cyan('\nV I E W I N G  all employees . . . \n') )
 
 	connection.query('SELECT * FROM employee', (err, res) => {
 		if (err) throw err;
@@ -94,7 +94,7 @@ const viewAllEmp = () => {
 
 
 const viewAllDepts = () => {
-	console.log('v i e w i n g departments . . .');
+	console.log( chalk.bold.cyan('\nV I E W I N G  all departments . . . \n') );
 
 	connection.query('SELECT * FROM department', (err, results) => {
 		if (err) throw err;
@@ -114,7 +114,7 @@ const viewAllDepts = () => {
 				
 				return choiceArray;
 			  },
-			  message: 'select the id of the department you would like to view: ',
+			  message: 'select the id of the department you would like to view . . . ',
 			}
 		  ])
 		  .then((answer) => {
@@ -127,8 +127,9 @@ const viewAllDepts = () => {
 				],
                 (err, res) => {
                     if (err) throw err;
-					console.log('here are the results . . .');
+					console.log( chalk.yellow('\nh e r e  are the results . . . \n') );
 					console.table(res)
+					console.log('\n')
 					
 					start();
                 }
@@ -139,7 +140,7 @@ const viewAllDepts = () => {
 
 
 const viewAllRoles = () => {
-	console.log('v i e w i n g roless . . .')
+	console.log( chalk.bold.cyan('\nV I E W I N G  all roles . . . \n') )
 
 	connection.query('SELECT * FROM role', (err, res) => {
 		if (err) throw err;
@@ -187,8 +188,8 @@ const addEmp = () => {
                 },
                 (err) => {
                     if (err) throw err;
-					console.log('an employee has been a d d e d . . .');
-					// re-prompt user
+					console.log('\nthe employee has been a d d e d . . . \n');
+
 					start();
                 }
             );
@@ -218,8 +219,8 @@ const addDept = () => {
                 },
                 (err) => {
                     if (err) throw err;
-					console.log('the department as been c r e a t e d . . .');
-					// re-prompt user
+					console.log('\nthe department has been c r e a t e d . . . \n');
+
 					start();
                 }
             );
@@ -261,7 +262,7 @@ const addRole = () => {
                 },
                 (err) => {
                     if (err) throw err;
-					console.log('the R O L E as been c r e a t e d . . .');
+					console.log('\nthe role has been c r e a t e d . . . \n');
 
 					start();
                 }
@@ -273,7 +274,7 @@ const addRole = () => {
 
 // U P D A T I N G
 const updateEmp = () => {
-	console.log('here are the current employees . . .');
+	console.log( chalk.bold.cyan('\nV I E W I N G  all current employees . . . \n') );
 
 	connection.query('SELECT * FROM employee', (err, results) => {
 		if (err) throw err;
@@ -293,7 +294,7 @@ const updateEmp = () => {
 				
 				return choiceArray;
 			  },
-			  message: 'select the id of the employee you would like to update?',
+			  message: 'select the id of the employee you would like to update . . . ',
 			},
 			{ // just prompts for this info again
                 name: 'id',
@@ -338,8 +339,8 @@ const updateEmp = () => {
 				],
                 (err) => {
                     if (err) throw err;
-					console.log('an employee has been updated . . .');
-					// re-prompt user
+					console.log('\nthe employee has been u p d a t e d . . . \n');
+
 					start();
                 }
 			);			
@@ -348,7 +349,7 @@ const updateEmp = () => {
 };
 
 const deleteEmp = () => {
-	console.log('in the deleting part: here the current employees  . . .');
+	console.log( chalk.bold.cyan('\nV I E W I N G  all current employees . . . \n') );
 
 	connection.query('SELECT * FROM employee', (err, results) => {
 		if (err) throw err;
@@ -368,7 +369,7 @@ const deleteEmp = () => {
 				
 				return choiceArray;
 			  },
-			  message: 'select the id of the employee you would like to delete?',
+			  message: 'select the id of the employee you would like to delete . . . ',
 			},
 		  ])
 		  .then((answer) => {
@@ -381,8 +382,8 @@ const deleteEmp = () => {
 				],
                 (err) => {
                     if (err) throw err;
-					console.log('an employee has been deleted. . .');
-					// re-prompt user
+					console.log('\nthe employee has been d e l e t e d . . . \n');
+
 					start();
                 }
 			);			
