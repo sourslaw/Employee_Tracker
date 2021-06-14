@@ -69,7 +69,7 @@ const start = () => {
 						break;
 					case 'exit':
 						connection.end();
-						console.log('bye bye')
+						console.log('\nb y e  b y e\n')
 						break;		
 			
 					default:
@@ -94,7 +94,7 @@ const viewAllEmp = () => {
 
 
 const viewAllDepts = () => {
-	console.log( chalk.bold.cyan('\nV I E W I N G  all departments . . . \n') );
+	console.log( chalk.bold.yellow('\nV I E W I N G  all departments . . . \n') );
 
 	connection.query('SELECT * FROM department', (err, results) => {
 		if (err) throw err;
@@ -140,15 +140,48 @@ const viewAllDepts = () => {
 
 
 const viewAllRoles = () => {
-	console.log( chalk.bold.cyan('\nV I E W I N G  all roles . . . \n') )
+	console.log( chalk.bold.yellow('\nV I E W I N G  all roles . . . \n') );
 
-	connection.query('SELECT * FROM role', (err, res) => {
+	connection.query('SELECT * FROM role', (err, results) => {
 		if (err) throw err;
+		inquirer
+		  .prompt([
+			{
+			  name: 'choice',
+			  type: 'list',
+			  choices() {
+				const choiceArray = [];
 
-		console.log( console.table(res) );
-		
-		start();
-	});
+				results.forEach((person) => {
+				  choiceArray.push(person.id);
+				});
+
+				console.table(results);
+				
+				return choiceArray;
+			  },
+			  message: 'select the id of the role you would like to view . . . ',
+			}
+		  ])
+		  .then((answer) => {
+			connection.query(
+                'SELECT employee.id, employee.last_name, employee.first_name, role.title, role.salary, employee.manager_id FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE ?',
+                [
+					{
+						'role.id': answer.choice,
+					},
+				],
+                (err, res) => {
+                    if (err) throw err;
+					console.log( chalk.yellow('\nh e r e  are the results . . . \n') );
+					console.table(res)
+					console.log('\n')
+					
+					start();
+                }
+			);			
+	  });
+	})
 };
 
 
@@ -156,6 +189,11 @@ const viewAllRoles = () => {
 const addEmp = () => {
 	inquirer
         .prompt([
+			{
+                name: 'id',
+                type: 'input',
+                message: "enter the employee's ID: ",
+            },
             {
                 name: 'firstName',
                 type: 'input',
@@ -181,6 +219,7 @@ const addEmp = () => {
             connection.query(
                 'INSERT INTO employee SET ?',
                 {
+					id: answer.id,
                     first_name: answer.firstName,
                     last_name: answer.lastName,
                     role_id: answer.roleID,
@@ -274,7 +313,7 @@ const addRole = () => {
 
 // U P D A T I N G
 const updateEmp = () => {
-	console.log( chalk.bold.cyan('\nV I E W I N G  all current employees . . . \n') );
+	console.log( chalk.bold.yellow('\nV I E W I N G  all current employees . . . \n') );
 
 	connection.query('SELECT * FROM employee', (err, results) => {
 		if (err) throw err;
@@ -339,7 +378,7 @@ const updateEmp = () => {
 				],
                 (err) => {
                     if (err) throw err;
-					console.log('\nthe employee has been u p d a t e d . . . \n');
+					console.log( chalk.yellow('\nthe employee has been u p d a t e d . . . \n') );
 
 					start();
                 }
@@ -349,7 +388,7 @@ const updateEmp = () => {
 };
 
 const deleteEmp = () => {
-	console.log( chalk.bold.cyan('\nV I E W I N G  all current employees . . . \n') );
+	console.log( chalk.bold.red('\nV I E W I N G  all current employees available for DELETION . . . \n') );
 
 	connection.query('SELECT * FROM employee', (err, results) => {
 		if (err) throw err;
@@ -382,7 +421,7 @@ const deleteEmp = () => {
 				],
                 (err) => {
                     if (err) throw err;
-					console.log('\nthe employee has been d e l e t e d . . . \n');
+					console.log( chalk.red('\nthe employee has been d e l e t e d . . . \n') );
 
 					start();
                 }
