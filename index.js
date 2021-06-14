@@ -83,17 +83,51 @@ const viewAllEmp = () => {
 	});
 };
 
+
 const viewAllDepts = () => {
-	console.log('v i e w i n g departments . . .')
+	console.log('v i e w i n g departments . . .');
 
-	connection.query('SELECT * FROM department', (err, res) => {
+	connection.query('SELECT * FROM department', (err, results) => {
 		if (err) throw err;
+		inquirer
+		  .prompt([
+			{
+			  name: 'choice',
+			  type: 'list',
+			  choices() {
+				const choiceArray = [];
 
-		console.log( console.table(res) );
-		
-		start();
-	});
+				results.forEach((person) => {
+				  choiceArray.push(person.id);
+				});
+
+				console.table(results)
+				
+				return choiceArray;
+			  },
+			  message: 'select the id of the department you would like to view: ',
+			}
+		  ])
+		  .then((answer) => {
+			connection.query(
+                'SELECT employee.id, employee.last_name, employee.first_name, role.title, role.salary, employee.manager_id FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE ?',
+                [
+					{
+						'department.id': answer.choice,
+					},
+				],
+                (err, res) => {
+                    if (err) throw err;
+					console.log('here are teh resutls. . .');
+					console.table(res)
+					
+					start();
+                }
+			);			
+	  });
+	})
 };
+
 
 const viewAllRoles = () => {
 	console.log('v i e w i n g roless . . .')
