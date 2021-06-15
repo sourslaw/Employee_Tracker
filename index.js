@@ -80,6 +80,7 @@ const start = () => {
 };
 
 // V I E W I N G
+// e m p l o y e e s
 const viewAllEmp = () => {
 	console.log( chalk.bold.cyan('\nV I E W I N G  all employees . . . \n') )
 
@@ -91,8 +92,7 @@ const viewAllEmp = () => {
 		start();
 	});
 };
-
-
+// d e p a r t m e n t s
 const viewAllDepts = () => {
 	console.log( chalk.bold.yellow('\nV I E W I N G  all departments . . . \n') );
 
@@ -137,8 +137,7 @@ const viewAllDepts = () => {
 	  });
 	})
 };
-
-
+// r o l e s
 const viewAllRoles = () => {
 	console.log( chalk.bold.yellow('\nV I E W I N G  all roles . . . \n') );
 
@@ -183,9 +182,8 @@ const viewAllRoles = () => {
 	  });
 	})
 };
-
-
 // A D D I N G
+// e m p l o y e e s
 const addEmp = () => {
 	inquirer
         .prompt([
@@ -234,7 +232,7 @@ const addEmp = () => {
             );
         });
 };
-
+// d e p a r t m e n t s
 const addDept = () => {
 	inquirer
         .prompt([
@@ -265,7 +263,7 @@ const addDept = () => {
             );
         });
 };
-
+// r o l e s
 const addRole = () => {
 	inquirer
         .prompt([
@@ -308,10 +306,8 @@ const addRole = () => {
             );
         });
 };
-
-
-
 // U P D A T I N G
+// e m p l o y e e s
 const updateEmp = () => {
 	console.log( chalk.bold.yellow('\nV I E W I N G  all current employees . . . \n') );
 
@@ -386,7 +382,8 @@ const updateEmp = () => {
 	  });
 	})
 };
-
+// D E L E T I N G
+// e m p l o y e e s
 const deleteEmp = () => {
 	console.log( chalk.bold.red('\nV I E W I N G  all current employees available for DELETION . . . \n') );
 
@@ -430,7 +427,6 @@ const deleteEmp = () => {
 	})	
 };
   
-
 // Connect to the DB
 connection.connect((err) => {
     if (err) throw err;
