@@ -4,6 +4,7 @@ CREATE DATABASE emp_trackerDB;
 USE emp_trackerDB;
 
 
+-- t a b l e s
 CREATE TABLE department (
     id INT NOT NULL,
 	name VARCHAR(30) NOT NULL,
@@ -28,9 +29,11 @@ CREATE TABLE employee (
 );
 
 
+-- d e p a r t m e n t seeds
 INSERT INTO department (id, name)
 VALUES (0, 'ceo'), (1, 'development'), (2, 'programs'), (3, 'marketing'), (4, 'hr');
 
+-- r o l e seeds
 INSERT INTO role (id, title, salary, department_id)
 VALUES (10, 'ceo', 150000.00, 0);
 INSERT INTO role (id, title, salary, department_id)
@@ -42,6 +45,7 @@ VALUES (310, 'marketing director', 90000.00, 3), (315, 'ads manager', 82000.00, 
 INSERT INTO role (id, title, salary, department_id)
 VALUES (410, 'hr director', 90000.00, 4), (415, 'hiring manager', 65000.00, 4);
 
+-- e m p l o y e e seeds
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES (10, 'elijah', 'lewis', 10, 10);
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)

@@ -7,8 +7,9 @@
 - The application is able to perform the following:
 	- View all employees, view employees by department, view employees by role
 	- Add employees, departments, or roles
+	- Delete employees, departments, or roles
 	- Update employees
-	- Delete employees
+
 
 ### The User Story for this project is as follows:
 - As a business owner, I want to be able to view and manage the departments, roles, and employees in my company, So that I can organize and plan my business
@@ -18,6 +19,12 @@
 
 ### Usage
 ![alt text](assets/images/screenshot_usage.gif)
+
+- The application is invoked via the following command:
+	-	```bash
+		npm start
+		```
+- The interface will prompt the user with options regarding the company's employee administrative data
 
 ### Credits
 - [chalk](https://www.npmjs.com/package/chalk)
